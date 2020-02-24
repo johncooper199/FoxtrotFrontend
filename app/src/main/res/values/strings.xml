@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">FoxtrotFrontend</string>
     <string name="action_settings">Settings</string>
+    <string name="new_report">New Report</string>
+    <string name="my_reports">My Reports</string>
     <string name="dialog_text">Congratulations! You\'ve extended your streak</string>
 </resources>
