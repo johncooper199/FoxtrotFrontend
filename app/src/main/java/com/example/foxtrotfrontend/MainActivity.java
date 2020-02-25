@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             return true;
         }
 
@@ -56,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
     public void newReport(View view){
         // Spawn new report page from main menu
         Intent intent = new Intent(this, NewReportActivity.class);
+        startActivity(intent);
+    }
+
+    public void nearbyReports(View view){
+        // Spawn new report page from main menu
+        Intent intent = new Intent(this, NearbyReportsActivity.class);
+        startActivity(intent);
+    }
+
+    public void myReports(View view) {
+        // Spawn new report page from main menu
+        Intent intent = new Intent(this, MyReportsActivity.class);
         startActivity(intent);
     }
 }

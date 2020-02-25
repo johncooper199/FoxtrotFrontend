@@ -6,27 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 
-public class NewReportActivity extends AppCompatActivity {
-
-    String[] pests = {"Pea and been weevil", "Downy mildew", "Aphid", "Chocolate spot", "Bean seed beetle", "Bean rust"};
+public class MyReportsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_report);
+        setContentView(R.layout.activity_nearby_reports);
         Intent intent = getIntent();
-        getSupportActionBar().setTitle("New Report");
-
-        //Creating the instance of ArrayAdapter containing list of fruit names
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, pests);
-        //Getting the instance of AutoCompleteTextView
-        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.pestName);
-        actv.setThreshold(1);//will start working from first character
-        actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+        getSupportActionBar().setTitle("My Reports");
     }
 
     @Override
@@ -51,3 +39,4 @@ public class NewReportActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
