@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,8 @@ public class ReportHTTP {
         }
     }
 
-    public boolean newReport(int reportId, Date date, float latitude,
-                          float longitude, String name, String description,
+    public boolean newReport(int reportId, Date date, double latitude,
+                          double longitude, String name, String description,
                           String category, Image image, Date solved, String severity) {
 
         // POST request to the API with the input data
@@ -105,7 +106,7 @@ public class ReportHTTP {
     }
 
 
-    public JSONArray getInfo(String name, float latitude, float longitude) {
+    public JSONArray getInfo(String name, double latitude, double longitude) {
 
         // GET request to the API with the input data
 
@@ -151,9 +152,7 @@ public class ReportHTTP {
                 System.err.println("Input Stream Error");
             }
 
-
             result = new JSONArray(response.toString());
-
 
 
         } catch (MalformedURLException e) {
@@ -168,6 +167,44 @@ public class ReportHTTP {
 
         // Returns JSONArray if API GET worked, else null
 
+    }
+
+    public ArrayList<NearbyReport> getRadar(String[] pests, double latitude, double longitude) {
+
+        // Takes in all pests and queries for them in a particular location
+
+        ArrayList<NearbyReport> result = null;
+
+        for (String pest : pests) {
+
+            JSONArray get = getInfo(pest, latitude, longitude);
+
+            if (get != null) {
+
+                for (int i = 0; i < get.length(); i++) {
+
+                    try {
+                        // Parse JSONObjects to NearbyReports
+                        JSONObject current = get.getJSONObject(i);
+
+                        if (result == null) {
+                            result = new ArrayList<>();
+                        }
+                        result.add(new NearbyReport(
+                                pest,
+                                new Date(current.getString("date")), // CHECK THIS
+                                current.getDouble("latitude"),
+                                current.getDouble("longitude"),
+                                current.getInt("severity")));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
 
