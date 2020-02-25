@@ -1,6 +1,7 @@
 package com.example.foxtrotfrontend;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.content.Intent;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("NIAB Data Collection");
+
     }
 
     @Override

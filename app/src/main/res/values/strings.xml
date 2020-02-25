@@ -4,4 +4,18 @@
     <string name="new_report">New Report</string>
     <string name="my_reports">My Reports</string>
     <string name="dialog_text">Congratulations! You\'ve extended your streak</string>
+    <string name="insert_image">Insert Image</string>
+    <string name="pest">pest</string>
+    <string name="dropdown_menu_for_pests">Dropdown Menu for Pests</string>
+    <string name="choose_location">Choose Location</string>
+    <string name="give_any_further_information">Give any Further Information</string>
+    <string name="severity_1">Severity 1</string>
+    <string name="severity_2">Severity 2</string>
+    <string name="severity_3">Severity 3</string>
+    <string name="severity_4">Severity 4</string>
+    <string name="severity_5">Severity 5</string>
+    <string name="crop_name">Crop Name</string>
+    <string name="pest_name">Pest Name:</string>
+    <string name="button">Button</string>
+    <string name="send_report">Send Report</string>
 </resources>
