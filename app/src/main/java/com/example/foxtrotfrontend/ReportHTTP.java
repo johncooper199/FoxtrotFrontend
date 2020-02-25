@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,8 @@ public class ReportHTTP {
         }
     }
 
-    public boolean newReport(int reportId, Date date, float latitude,
-                          float longitude, String name, String description,
+    public boolean newReport(int reportId, Date date, double latitude,
+                          double longitude, String name, String description,
                           String category, Image image, Date solved, String severity) {
 
         // POST request to the API with the input data
@@ -105,17 +106,15 @@ public class ReportHTTP {
     }
 
 
-    public JSONArray getInfo(String name, float latitude, float longitude) {
+    public JSONArray getPestInfo(String name, double latitude, double longitude) {
 
         // GET request to the API with the input data
-
-        //
 
         JSONArray result = null;
 
         try {
 
-            URL getInfoURL = new URL(url.toString() + "/map/pest"); // NEED TO FILL THIS IN
+            URL getInfoURL = new URL(url.toString() + "/map/pest?"); // NEED TO FILL THIS IN
 
 
             Map<String, String> parameters = new HashMap<>();
@@ -133,7 +132,102 @@ public class ReportHTTP {
 
             con.setRequestProperty("Content-Type", "application/json");
 
-            int status = con.getResponseCode();
+            StringBuilder response = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"));
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                br.close();
+
+            } catch (IOException e) {
+                System.err.println("Input Stream Error");
+            }
+
+            result = new JSONArray(response.toString());
+
+
+        } catch (MalformedURLException e) {
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("Unable to establish a connection to <" + url.toString() + ">");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+        // Returns JSONArray if API GET worked, else null
+
+    }
+
+    public ArrayList<NearbyReport> getPestRadar(String[] pests, double latitude, double longitude) {
+
+        // Takes in all pests and queries for them in a particular location
+
+        ArrayList<NearbyReport> result = null;
+
+        for (String pest : pests) {
+
+            JSONArray get = getPestInfo(pest, latitude, longitude);
+
+            if (get != null) {
+
+                for (int i = 0; i < get.length(); i++) {
+
+                    try {
+                        // Parse JSONObjects to NearbyReports
+                        JSONObject current = get.getJSONObject(i);
+
+                        if (result == null) {
+                            result = new ArrayList<>();
+                        }
+                        result.add(new NearbyReport(
+                                pest,
+                                new Date(current.getString("date")), // CHECK THIS
+                                current.getDouble("latitude"),
+                                current.getDouble("longitude"),
+                                current.getInt("severity")));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
+    public JSONArray getDiseaseInfo(String name, double latitude, double longitude) {
+
+        // GET request to the API with the input data
+
+        JSONArray result = null;
+
+        try {
+
+            URL getInfoURL = new URL(url.toString() + "/map/disease?"); // NEED TO FILL THIS IN
+
+
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("name", name);
+            parameters.put("latitude", latitude + "");
+            parameters.put("longitude", longitude + "");
+
+            HttpURLConnection con = (HttpURLConnection) getInfoURL.openConnection();
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
+            dos.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+            dos.flush();
+            dos.close();
+
+            con.setRequestProperty("Content-Type", "application/json");
 
 
             StringBuilder response = new StringBuilder();
@@ -151,9 +245,7 @@ public class ReportHTTP {
                 System.err.println("Input Stream Error");
             }
 
-
             result = new JSONArray(response.toString());
-
 
 
         } catch (MalformedURLException e) {
@@ -168,6 +260,44 @@ public class ReportHTTP {
 
         // Returns JSONArray if API GET worked, else null
 
+    }
+
+    public ArrayList<NearbyReport> getDiseaseRadar(String[] pests, double latitude, double longitude) {
+
+        // Takes in all pests and queries for them in a particular location
+
+        ArrayList<NearbyReport> result = null;
+
+        for (String pest : pests) {
+
+            JSONArray get = getPestInfo(pest, latitude, longitude);
+
+            if (get != null) {
+
+                for (int i = 0; i < get.length(); i++) {
+
+                    try {
+                        // Parse JSONObjects to NearbyReports
+                        JSONObject current = get.getJSONObject(i);
+
+                        if (result == null) {
+                            result = new ArrayList<>();
+                        }
+                        result.add(new NearbyReport(
+                                pest,
+                                new Date(current.getString("date")), // CHECK THIS
+                                current.getDouble("latitude"),
+                                current.getDouble("longitude"),
+                                current.getInt("severity")));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
 
