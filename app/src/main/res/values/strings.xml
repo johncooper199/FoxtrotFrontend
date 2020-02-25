@@ -18,4 +18,6 @@
     <string name="pest_name">Pest Name:</string>
     <string name="button">Button</string>
     <string name="send_report">Send Report</string>
+    <string name="about_the_app">About The App</string>
+    <string name="nearby_reports">Nearby Reports</string>
 </resources>
