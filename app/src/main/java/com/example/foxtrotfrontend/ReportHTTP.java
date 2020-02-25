@@ -106,17 +106,15 @@ public class ReportHTTP {
     }
 
 
-    public JSONArray getInfo(String name, double latitude, double longitude) {
+    public JSONArray getPestInfo(String name, double latitude, double longitude) {
 
         // GET request to the API with the input data
-
-        //
 
         JSONArray result = null;
 
         try {
 
-            URL getInfoURL = new URL(url.toString() + "/map/pest"); // NEED TO FILL THIS IN
+            URL getInfoURL = new URL(url.toString() + "/map/pest?"); // NEED TO FILL THIS IN
 
 
             Map<String, String> parameters = new HashMap<>();
@@ -134,7 +132,102 @@ public class ReportHTTP {
 
             con.setRequestProperty("Content-Type", "application/json");
 
-            int status = con.getResponseCode();
+            StringBuilder response = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"));
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                br.close();
+
+            } catch (IOException e) {
+                System.err.println("Input Stream Error");
+            }
+
+            result = new JSONArray(response.toString());
+
+
+        } catch (MalformedURLException e) {
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("Unable to establish a connection to <" + url.toString() + ">");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+        // Returns JSONArray if API GET worked, else null
+
+    }
+
+    public ArrayList<NearbyReport> getPestRadar(String[] pests, double latitude, double longitude) {
+
+        // Takes in all pests and queries for them in a particular location
+
+        ArrayList<NearbyReport> result = null;
+
+        for (String pest : pests) {
+
+            JSONArray get = getPestInfo(pest, latitude, longitude);
+
+            if (get != null) {
+
+                for (int i = 0; i < get.length(); i++) {
+
+                    try {
+                        // Parse JSONObjects to NearbyReports
+                        JSONObject current = get.getJSONObject(i);
+
+                        if (result == null) {
+                            result = new ArrayList<>();
+                        }
+                        result.add(new NearbyReport(
+                                pest,
+                                new Date(current.getString("date")), // CHECK THIS
+                                current.getDouble("latitude"),
+                                current.getDouble("longitude"),
+                                current.getInt("severity")));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
+    public JSONArray getDiseaseInfo(String name, double latitude, double longitude) {
+
+        // GET request to the API with the input data
+
+        JSONArray result = null;
+
+        try {
+
+            URL getInfoURL = new URL(url.toString() + "/map/disease?"); // NEED TO FILL THIS IN
+
+
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("name", name);
+            parameters.put("latitude", latitude + "");
+            parameters.put("longitude", longitude + "");
+
+            HttpURLConnection con = (HttpURLConnection) getInfoURL.openConnection();
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
+            dos.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+            dos.flush();
+            dos.close();
+
+            con.setRequestProperty("Content-Type", "application/json");
 
 
             StringBuilder response = new StringBuilder();
@@ -169,7 +262,7 @@ public class ReportHTTP {
 
     }
 
-    public ArrayList<NearbyReport> getRadar(String[] pests, double latitude, double longitude) {
+    public ArrayList<NearbyReport> getDiseaseRadar(String[] pests, double latitude, double longitude) {
 
         // Takes in all pests and queries for them in a particular location
 
@@ -177,7 +270,7 @@ public class ReportHTTP {
 
         for (String pest : pests) {
 
-            JSONArray get = getInfo(pest, latitude, longitude);
+            JSONArray get = getPestInfo(pest, latitude, longitude);
 
             if (get != null) {
 
