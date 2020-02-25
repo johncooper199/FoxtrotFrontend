@@ -105,6 +105,71 @@ public class ReportHTTP {
 
     }
 
+    public boolean updateReport(int reportId, Date date, String description,
+                                Image image, int severity) {
+
+        // POST request to the API with update data
+
+        boolean complete = false;
+
+        try {
+
+            URL updateReportURL = new URL(url.toString() + "/api/update");
+
+            String jsonString = new JSONObject()
+                    .put("report_id", reportId)
+                    .put("date", date.toString())
+                    .put("image", image.toString())
+                    .put("severity", severity).toString();
+
+            HttpURLConnection con = (HttpURLConnection) updateReportURL.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+
+            try {
+                OutputStream os = con.getOutputStream();
+                byte[] input = jsonString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+
+                os.close();
+            } catch (IOException e) {
+                System.err.println("Output Stream Error");
+            }
+
+            StringBuilder response = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"));
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                br.close();
+
+            } catch (IOException e) {
+                System.err.println("Input Stream Error");
+            }
+
+            JSONObject result = new JSONObject(response.toString());
+            if (result.has("complete")) {
+                complete = true;
+            }
+
+
+        } catch (MalformedURLException e) {
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("Unable to establish a connection to <" + url.toString() + ">");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return complete;
+
+    }
+
 
     public JSONArray getPestInfo(String name, double latitude, double longitude) {
 
