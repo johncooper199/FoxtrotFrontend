@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,17 +29,21 @@ public class InitialActivity extends AppCompatActivity {
     }
 
 
-    public void newReport(View view) {
+    public void newReport(View view) throws ParseException {
         // Spawn new report page from main menu
+        Notifications nf = new Notifications();
+        nf.updateInteraction();
         Intent intent = new Intent(this, NewReportActivity.class);
         startActivity(intent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void blankReport(View view) {
+    public void blankReport(View view) throws ParseException {
         // Blank report
         // Get report id from server
         // Send blank report
+        Notifications nf = new Notifications();
+        nf.updateInteraction();
         int reportId = 0;
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
