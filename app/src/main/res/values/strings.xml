@@ -24,4 +24,8 @@
     <string name="google_maps_key">AIzaSyBVP_FU1I4YGBxjQHBIlnQeJmQuMKyxFE0</string>
     <string name="severity_of_issue_with_5_as_most_severe">Severity of Issue (with 5 as most severe)</string>
     <string name="element_text">Report:</string>
+    <string name="update_report">Update Report</string>
+    <string name="report">Report:</string>
+    <string name="dropdown_menu_for_reports">Dropdown Menu for Reports</string>
+    <string name="send_update">Send Update</string>
 </resources>

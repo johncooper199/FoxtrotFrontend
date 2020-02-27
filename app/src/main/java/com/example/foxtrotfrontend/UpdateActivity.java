@@ -1,20 +1,21 @@
 package com.example.foxtrotfrontend;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
 
-public class MyReportsActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+public class UpdateActivity extends AppCompatActivity {
 
-    String[] myDataset = {"12/01/2018 04:01 AM - Bean rust",
+    String[] reports = {"12/01/2018 04:01 AM - Bean rust",
             "24/08/2018 09:20 PM - Chocolate spot",
             "22/04/2018 04:21 AM - Downy mildew",
             "11/01/2018 02:57 AM - Pea and been weevil",
@@ -38,23 +39,27 @@ public class MyReportsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearby_reports);
+        setContentView(R.layout.activity_update);
         Intent intent = getIntent();
-        getSupportActionBar().setTitle("My Reports");
+        getSupportActionBar().setTitle("Update Report");
 
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        //Creating the instance of ArrayAdapter containing list of fruit names
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item, reports);
+        //Getting the instance of AutoCompleteTextView
+        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.reportName);
+        actv.setThreshold(1);//will start working from first character
+        actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        // specify an adapter (see also next example)
-        mAdapter = new NearbyAdaptor(myDataset);
-        recyclerView.setAdapter(mAdapter);
+        // Setting Button to Go Back To Main Once Sent
+        Button buttonSend = (Button) findViewById(R.id.Send);
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendIntent();
+            }
+        });
     }
 
     @Override
@@ -78,5 +83,9 @@ public class MyReportsActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
 
+    private void sendIntent() {
+        NavUtils.navigateUpFromSameTask(this);
+        Toast.makeText(this, "Report Sent", Toast.LENGTH_LONG).show();
+    }
+}
