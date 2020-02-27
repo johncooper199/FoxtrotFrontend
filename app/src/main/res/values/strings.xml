@@ -20,4 +20,6 @@
     <string name="send_report">Send Report</string>
     <string name="about_the_app">About The App</string>
     <string name="nearby_reports">Nearby Reports</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="google_maps_key">AIzaSyBVP_FU1I4YGBxjQHBIlnQeJmQuMKyxFE0</string>
 </resources>

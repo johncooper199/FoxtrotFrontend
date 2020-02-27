@@ -6,8 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class NewReportActivity extends AppCompatActivity {
 
@@ -27,6 +32,15 @@ public class NewReportActivity extends AppCompatActivity {
         AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.pestName);
         actv.setThreshold(1);//will start working from first character
         actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+
+        // Setting Button to Go To Map Activity
+        Button button = (Button) findViewById(R.id.location);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickPointOnMap();
+            }
+        });
     }
 
     @Override
@@ -49,5 +63,22 @@ public class NewReportActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    static final int PICK_MAP_POINT_REQUEST = 999;  // The request code
+    private void pickPointOnMap() {
+        Intent pickPointIntent = new Intent(this, MapsActivity.class);
+        startActivityForResult(pickPointIntent, PICK_MAP_POINT_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_MAP_POINT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                LatLng latLng = (LatLng) data.getParcelableExtra("picked_point");
+                Toast.makeText(this, "Point Chosen: " + latLng.latitude + " " + latLng.longitude, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
