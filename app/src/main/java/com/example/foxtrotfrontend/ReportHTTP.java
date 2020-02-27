@@ -335,7 +335,7 @@ public class ReportHTTP {
 
         for (String pest : pests) {
 
-            JSONArray get = getPestInfo(pest, latitude, longitude);
+            JSONArray get = getDiseaseInfo(pest, latitude, longitude);
 
             if (get != null) {
 
@@ -363,6 +363,89 @@ public class ReportHTTP {
             }
         }
         return result;
+    }
+
+    public ArrayList<NearbyReport> getInitialRadar(double latitude, double longitude) {
+
+        // GET request to the API with the input data
+
+        JSONArray temp = null;
+
+        try {
+
+            URL getInfoURL = new URL(url.toString() + "/map/local?"); // NEED TO FILL THIS IN
+
+
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("latitude", latitude + "");
+            parameters.put("longitude", longitude + "");
+
+            HttpURLConnection con = (HttpURLConnection) getInfoURL.openConnection();
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
+            dos.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+            dos.flush();
+            dos.close();
+
+            con.setRequestProperty("Content-Type", "application/json");
+
+
+            StringBuilder response = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"));
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                br.close();
+
+            } catch (IOException e) {
+                System.err.println("Input Stream Error");
+            }
+
+            temp = new JSONArray(response.toString());
+
+
+        } catch (MalformedURLException e) {
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("Unable to establish a connection to <" + url.toString() + ">");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<NearbyReport> result = null;
+
+        if (temp != null) {
+
+            for (int i = 0; i < temp.length(); i++) {
+
+                try {
+                    // Parse JSONObjects to NearbyReports
+                    JSONObject current = temp.getJSONObject(i);
+
+                    if (result == null) {
+                        result = new ArrayList<>();
+                    }
+                    result.add(new NearbyReport(
+                            current.getString("name"),
+                            new Date(current.getString("date")), // CHECK THIS
+                            current.getDouble("latitude"),
+                            current.getDouble("longitude"),
+                            current.getInt("severity")));
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+
     }
 
 
