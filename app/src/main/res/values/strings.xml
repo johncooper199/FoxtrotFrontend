@@ -23,4 +23,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="google_maps_key">AIzaSyBVP_FU1I4YGBxjQHBIlnQeJmQuMKyxFE0</string>
     <string name="severity_of_issue_with_5_as_most_severe">Severity of Issue (with 5 as most severe)</string>
+    <string name="element_text">Report:</string>
 </resources>
