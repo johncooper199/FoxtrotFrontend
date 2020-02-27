@@ -30,35 +30,35 @@ public class Notifications extends AppCompatActivity {
         String strDate = dateFormat.format(currentDate);
 
         // Get shared preference
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("MyPref", 0);
 
         // Read shared preference
         int streak = 0;
-        streak = sharedPref.getInt("streak", streak);
-        String interactionDate = strDate;
-        interactionDate = sharedPref.getString("interactionDate", interactionDate);
-
-        // Update streak if new day. Ignore otherwise
-        Date lastDate = dateFormat.parse(interactionDate);
-        long diffInMillies = Math.abs(currentDate.getTime() - lastDate.getTime());
-        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        if (diff>=1 && diff<7) {
-            streak = streak + 1;
-            // Send notification
-            openDialog();
-        }
-
-        // If new interactionDate, update reminder
-        if (diff>=1) {
-            cancelNotification();
-            createNotification(lastDate);
-        }
-
-        // Write current time to shared preference
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("streak", streak);
-        editor.putString("interactionDate", interactionDate);
-        editor.commit();
+//        streak = sharedPref.getInt("streak", streak);
+//        String interactionDate = strDate;
+//        interactionDate = sharedPref.getString("interactionDate", interactionDate);
+//
+//        // Update streak if new day. Ignore otherwise
+//        Date lastDate = dateFormat.parse(interactionDate);
+//        long diffInMillies = Math.abs(currentDate.getTime() - lastDate.getTime());
+//        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+//        if (diff>=1 && diff<7) {
+//            streak = streak + 1;
+//            // Send notification
+//            openDialog();
+//        }
+//
+//        // If new interactionDate, update reminder
+//        if (diff>=1) {
+//            cancelNotification();
+//            createNotification(lastDate);
+//        }
+//
+//        // Write current time to shared preference
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putInt("streak", streak);
+//        editor.putString("interactionDate", interactionDate);
+//        editor.commit();
 
         return streak;
     }
