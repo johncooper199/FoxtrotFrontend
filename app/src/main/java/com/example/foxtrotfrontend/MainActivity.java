@@ -70,4 +70,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MyReportsActivity.class);
         startActivity(intent);
     }
+
+    public void updateReports(View view) {
+        // Spawn new report page from main menu
+        Intent intent = new Intent(this, UpdateActivity.class);
+        startActivity(intent);
+    }
 }

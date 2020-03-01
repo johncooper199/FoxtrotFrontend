@@ -2,10 +2,12 @@ package com.example.foxtrotfrontend;
 
 import android.media.Image;
 
+import com.sun.deploy.net.HttpRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 public class ReportHTTP {
 
     private URL url;
@@ -176,46 +177,15 @@ public class ReportHTTP {
         // GET request to the API with the input data
 
         JSONArray result = null;
-
         try {
+            URL getInfoURL = new URL(url.toString() + "/map/disease");
+            result = new JSONArray(HttpRequest.get(
+                    getInfoURL.toString(), true, "name", name, "latitude", latitude,"longitude", longitude
+                    ).accept("application/json")
+                    .body()
+                    .toString());
 
-            URL getInfoURL = new URL(url.toString() + "/map/pest?"); // NEED TO FILL THIS IN
-
-
-            Map<String, String> parameters = new HashMap<>();
-            parameters.put("name", name);
-            parameters.put("latitude", latitude + "");
-            parameters.put("longitude", longitude + "");
-
-            HttpURLConnection con = (HttpURLConnection) getInfoURL.openConnection();
-            con.setRequestMethod("GET");
-            con.setDoOutput(true);
-            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
-            dos.writeBytes(ParameterStringBuilder.getParamsString(parameters));
-            dos.flush();
-            dos.close();
-
-            con.setRequestProperty("Content-Type", "application/json");
-
-            StringBuilder response = new StringBuilder();
-
-            try {
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(con.getInputStream(), "utf-8"));
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                br.close();
-
-            } catch (IOException e) {
-                System.err.println("Input Stream Error");
-            }
-
-            result = new JSONArray(response.toString());
-
-
-        } catch (MalformedURLException e) {
+        } catch (HTTPException |MalformedURLException e) {
             System.err.println("Malformed URL");
         } catch (IOException e) {
             System.err.println("Unable to establish a connection to <" + url.toString() + ">");
