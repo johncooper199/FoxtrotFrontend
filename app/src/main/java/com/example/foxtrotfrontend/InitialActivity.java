@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -46,10 +48,11 @@ public class InitialActivity extends AppCompatActivity {
         streak = sharedPref.getInt("streak", streak);
         int new_streak = updateInteraction();
         if (new_streak == streak+1) {
-            openDialog();
-
+            openDialog(new_streak);
         }
         Intent intent = new Intent(this, NewReportActivity.class);
+        intent.putExtra("I_CAME_FROM", "initial");
+
         startActivity(intent);
     }
 
@@ -110,12 +113,31 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     // Create openDialog when streak is updated
-    public void openDialog() {
-        final Dialog dialog = new Dialog(this); // Context, this, etc.
-        dialog.setContentView(R.layout.dialog_demo);
-        dialog.setTitle("Streak extended");
+    public AlertDialog.Builder openDialog(int streak) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Streak Updated");
+        String message = "You have extended your streak to " + streak + " days.";
+        builder.setMessage(message);
+        // Set click listener for alert dialog buttons
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // User clicked the OK button
+                        break;
+                }
+            }
+        };
+        // Set the alert dialog yes button click listener
+        builder.setPositiveButton("OK", dialogClickListener);
+        AlertDialog dialog = builder.create();
         dialog.show();
+        // Display the alert dialog on interface
+        return builder;
     }
+
+    private boolean mustScan = true;
 
     // Cancel previously created notification
     public void cancelNotification() {

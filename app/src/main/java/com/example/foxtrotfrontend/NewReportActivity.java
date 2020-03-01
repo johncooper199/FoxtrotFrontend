@@ -3,6 +3,7 @@ package com.example.foxtrotfrontend;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -13,8 +14,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
 
 public class NewReportActivity extends AppCompatActivity {
@@ -33,8 +34,16 @@ public class NewReportActivity extends AppCompatActivity {
                 (this, android.R.layout.select_dialog_item, pests);
         //Getting the instance of AutoCompleteTextView
         AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.pestName);
-        actv.setThreshold(1);//will start working from first character
         actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+
+        String flag = intent.getStringExtra("I_CAME_FROM");
+        if(flag.equals("initial")){
+            //you came from a1 activity
+            actv.setText("Bean Rust");
+        } else {
+            //Getting the instance of AutoCompleteTextView
+            actv.setThreshold(1);//will start working from first character
+        }
 
         // Setting Button to Go To Map Activity
         Button buttonLoc = (Button) findViewById(R.id.location);
@@ -63,6 +72,13 @@ public class NewReportActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Called when back pressed
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
