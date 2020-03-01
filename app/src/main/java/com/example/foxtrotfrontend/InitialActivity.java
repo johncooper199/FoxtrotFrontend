@@ -47,7 +47,7 @@ public class InitialActivity extends AppCompatActivity {
         int new_streak = updateInteraction();
         if (new_streak == streak+1) {
             openDialog();
-            
+
         }
         Intent intent = new Intent(this, NewReportActivity.class);
         startActivity(intent);
