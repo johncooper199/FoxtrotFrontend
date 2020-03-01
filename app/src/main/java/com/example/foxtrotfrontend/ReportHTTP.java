@@ -2,7 +2,7 @@ package com.example.foxtrotfrontend;
 
 import android.media.Image;
 
-import com.sun.deploy.net.HttpRequest;
+import com.github.kevinsawicki.http.HttpRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 public class ReportHTTP {
 
     private URL url;
@@ -172,18 +173,75 @@ public class ReportHTTP {
     }
 
 
+   /* public JSONArray getPestInfo(String name, double latitude, double longitude) {
+
+        // GET request to the API with the input data
+
+        JSONArray result = null;
+
+        try {
+
+            URL getInfoURL = new URL(url.toString() + "/map/pest?"); // NEED TO FILL THIS IN
+
+
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("name", name);
+            parameters.put("latitude", latitude + "");
+            parameters.put("longitude", longitude + "");
+
+            HttpURLConnection con = (HttpURLConnection) getInfoURL.openConnection();
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            con.setRequestProperty();
+            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
+            dos.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+            dos.flush();
+            dos.close();
+
+            con.setRequestProperty("Content-Type", "application/json");
+
+            StringBuilder response = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"));
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                br.close();
+
+            } catch (IOException e) {
+                System.err.println("Input Stream Error");
+            }
+
+            result = new JSONArray(response.toString());
+
+
+        } catch (MalformedURLException e) {
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("Unable to establish a connection to <" + url.toString() + ">");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+        // Returns JSONArray if API GET worked, else null
+
+    }*/
+
     public JSONArray getPestInfo(String name, double latitude, double longitude) {
 
         // GET request to the API with the input data
 
         JSONArray result = null;
         try {
-            URL getInfoURL = new URL(url.toString() + "/map/disease");
+            URL getInfoURL = new URL(url.toString() + "/map/pest");
             result = new JSONArray(HttpRequest.get(
                     getInfoURL.toString(), true, "name", name, "latitude", latitude,"longitude", longitude
-                    ).accept("application/json")
-                    .body()
-                    .toString());
+            ).body().toString());
 
         } catch (HTTPException |MalformedURLException e) {
             System.err.println("Malformed URL");
@@ -238,7 +296,7 @@ public class ReportHTTP {
     }
 
 
-    public JSONArray getDiseaseInfo(String name, double latitude, double longitude) {
+/*    public JSONArray getDiseaseInfo(String name, double latitude, double longitude) {
 
         // GET request to the API with the input data
 
@@ -296,6 +354,31 @@ public class ReportHTTP {
         // Returns JSONArray if API GET worked, else null
 
     }
+    */
+
+    public JSONArray getDiseaseInfo(String name, double latitude, double longitude) {
+
+        // GET request to the API with the input data
+
+        JSONArray result = null;
+        try {
+            URL getInfoURL = new URL(url.toString() + "/map/disease");
+            result = new JSONArray(HttpRequest.get(
+                    getInfoURL.toString(), true, "name", name, "latitude", latitude,"longitude", longitude
+            ).body().toString());
+
+        } catch (HTTPException |MalformedURLException e) {
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("Unable to establish a connection to <" + url.toString() + ">");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+
+    }
 
     public ArrayList<NearbyReport> getDiseaseRadar(String[] pests, double latitude, double longitude) {
 
@@ -342,42 +425,10 @@ public class ReportHTTP {
         JSONArray temp = null;
 
         try {
-
-            URL getInfoURL = new URL(url.toString() + "/map/local?"); // NEED TO FILL THIS IN
-
-
-            Map<String, String> parameters = new HashMap<>();
-            parameters.put("latitude", latitude + "");
-            parameters.put("longitude", longitude + "");
-
-            HttpURLConnection con = (HttpURLConnection) getInfoURL.openConnection();
-            con.setRequestMethod("GET");
-            con.setDoOutput(true);
-            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
-            dos.writeBytes(ParameterStringBuilder.getParamsString(parameters));
-            dos.flush();
-            dos.close();
-
-            con.setRequestProperty("Content-Type", "application/json");
-
-
-            StringBuilder response = new StringBuilder();
-
-            try {
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(con.getInputStream(), "utf-8"));
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                br.close();
-
-            } catch (IOException e) {
-                System.err.println("Input Stream Error");
-            }
-
-            temp = new JSONArray(response.toString());
-
+                URL getInfoURL = new URL(url.toString() + "/map/local");
+                temp = new JSONArray(HttpRequest.get(
+                        getInfoURL.toString(), true, "latitude", latitude, "longitude", longitude
+                ).body().toString());
 
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL");
