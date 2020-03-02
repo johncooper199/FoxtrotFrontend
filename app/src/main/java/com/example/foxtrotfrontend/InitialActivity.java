@@ -2,6 +2,7 @@ package com.example.foxtrotfrontend;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import android.Manifest;
 import android.app.AlarmManager;
@@ -20,6 +21,7 @@ import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -38,6 +40,16 @@ public class InitialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
+        getSupportActionBar().setTitle("Have you seen?");
+
+        // Updates Date
+        SharedPreferences sharedPreferences = getSharedPreferences("STREAKS", MODE_PRIVATE);
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        int currentTime = Integer.parseInt(sdf.format(cal.getTime()));
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("LAST_OPENED", currentTime);
+        editor.commit();
     }
 
 
@@ -66,9 +78,9 @@ public class InitialActivity extends AppCompatActivity {
         double latitude = 52.205338;
         Date date = Calendar.getInstance().getTime();
         ReportHTTP conn = new ReportHTTP("www.google.com");
-        conn.newReport(reportId, date, latitude, longitude, initialPest, "", "", null, null, "0");
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        //TODO: conn.newReport(reportId, date, latitude, longitude, initialPest, "", "", null, null, "0");
+
+        NavUtils.navigateUpFromSameTask(this);
     }
 
     public int updateInteraction() throws ParseException {

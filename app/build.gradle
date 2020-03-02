@@ -21,7 +21,7 @@ android {
 
 dependencies {
     implementation 'com.github.kevinsawicki:http-request:6.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
+    implementation files('libs/jaxws-api-2.3.1.jar')
 }
