@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.Set;
 
 public class MyReportsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -42,6 +45,8 @@ public class MyReportsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         getSupportActionBar().setTitle("My Reports");
 
+        myDataset = getMyDataset();
+
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -71,12 +76,26 @@ public class MyReportsActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public String[] getMyDataset(){
+        Set<String> idvals;
+        SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
+        idvals = sharedPreferences.getStringSet("IDs", null);
+        String[] result;
+        if (idvals == null){
+            result = myDataset;
+        }
+        else{
+            result = new String[idvals.size()];
+            int current = 0;
+            for (String item : idvals){
+                result[current] = item;
+            }
+        }
+        return result;
     }
 }
 

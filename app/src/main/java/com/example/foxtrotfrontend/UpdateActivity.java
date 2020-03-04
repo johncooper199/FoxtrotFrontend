@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.Set;
 
 public class UpdateActivity extends AppCompatActivity {
 
@@ -42,6 +45,8 @@ public class UpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update);
         Intent intent = getIntent();
         getSupportActionBar().setTitle("Update Report");
+
+        reports = getMyDataset();
 
         //Creating the instance of ArrayAdapter containing list of fruit names
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
@@ -76,16 +81,29 @@ public class UpdateActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
     private void sendIntent() {
         NavUtils.navigateUpFromSameTask(this);
         Toast.makeText(this, "Report Sent", Toast.LENGTH_LONG).show();
+    }
+
+    public String[] getMyDataset(){
+        Set<String> idvals;
+        SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
+        idvals = sharedPreferences.getStringSet("IDs", null);
+        String[] result;
+        if (idvals == null){
+            result = reports;
+        }
+        else{
+            result = new String[idvals.size()];
+            int current = 0;
+            for (String item : idvals){
+                result[current] = item;
+            }
+        }
+        return result;
     }
 }

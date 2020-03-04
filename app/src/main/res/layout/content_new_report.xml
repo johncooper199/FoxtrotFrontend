@@ -116,31 +116,36 @@
                     android:id="@+id/severity1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/severity_1" />
+                    android:text="@string/severity_1"
+                    android:onClick="onRadioButtonClicked"/>
 
                 <RadioButton
                     android:id="@+id/severity2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/severity_2" />
+                    android:text="@string/severity_2"
+                    android:onClick="onRadioButtonClicked"/>
 
                 <RadioButton
                     android:id="@+id/severity3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/severity_3" />
+                    android:text="@string/severity_3"
+                    android:onClick="onRadioButtonClicked"/>
 
                 <RadioButton
                     android:id="@+id/severity4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/severity_4" />
+                    android:text="@string/severity_4"
+                    android:onClick="onRadioButtonClicked"/>
 
                 <RadioButton
                     android:id="@+id/severity5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/severity_5" />
+                    android:text="@string/severity_5"
+                    android:onClick="onRadioButtonClicked"/>
             </RadioGroup>
 
             <EditText

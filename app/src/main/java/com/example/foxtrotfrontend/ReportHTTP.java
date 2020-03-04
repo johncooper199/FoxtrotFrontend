@@ -1,5 +1,6 @@
 package com.example.foxtrotfrontend;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -34,8 +35,8 @@ public class ReportHTTP {
     }
 
     public boolean newReport(int reportId, Date date, double latitude,
-                          double longitude, String name, String description,
-                          String category, Image image, Date solved, String severity) {
+                             double longitude, String name, String description,
+                             String category, Bitmap image, String severity) {
 
         // POST request to the API with the input data
 
@@ -54,7 +55,7 @@ public class ReportHTTP {
                     .put("description", description)
                     .put("category", category)
                     .put("image", image.toString())
-                    .put("solved", solved.toString())
+                    .put("solved","")
                     .put("severity", severity).toString();
 
             HttpURLConnection con = (HttpURLConnection) newReportURL.openConnection();
