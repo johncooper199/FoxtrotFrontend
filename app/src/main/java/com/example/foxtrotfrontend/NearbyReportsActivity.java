@@ -9,12 +9,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class NearbyReportsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-
-    String[] myDataset = {"Pea and been weevil - 4 miles",
+    String url;
+    ReportHTTP reportHTTP = new ReportHTTP(url);
+    double latitude = 52.210925;
+        double longitude = 0.092022;
+    String[] myDataset = /*{"Pea and been weevil - 4 miles",
             "Chocolate spot - 12 miles",
             "Bean seed beetle - 19 miles",
             "Chocolate spot - 26 miles",
@@ -113,10 +118,16 @@ public class NearbyReportsActivity extends AppCompatActivity {
             "Aphid - 493 miles",
             "Bean seed beetle - 497 miles",
             "Bean seed beetle - 505 miles",
-            "Downy mildew - 513 miles"};
+            "Downy mildew - 513 miles"}*/{};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ArrayList<NearbyReport> nearbyReports= reportHTTP.getInitialRadar(latitude,longitude);
+        myDataset = new String[nearbyReports.size()];
+        for (int i = 0; i< nearbyReports.size();i++) {
+            String temp =  nearbyReports.get(i).getName() + " - " + getDistance(latitude,longitude, nearbyReports.get(i).getLatitude(), nearbyReports.get(i).getLongitude())+" miles";
+            myDataset[i]= temp;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_reports);
         Intent intent = getIntent();
@@ -157,5 +168,22 @@ public class NearbyReportsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public double getDistance(double lat1, double lon1, double lat2, double lon2) {
+
+        double R = 6371000;
+        double lat1R = Math.toRadians(lat1);
+        double lat2R = Math.toRadians(lat2);
+        double latDeltaR = Math.toRadians(lat2 - lat1);
+        double lonDeltaR = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(latDeltaR / 2) * Math.sin(latDeltaR / 2) +
+                Math.cos(lat1R) * Math.cos(lat2R) * Math.sin(lonDeltaR / 2) * Math.sin(lonDeltaR / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+
     }
 }
