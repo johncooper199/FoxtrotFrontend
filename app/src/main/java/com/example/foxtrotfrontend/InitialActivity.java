@@ -77,8 +77,11 @@ public class InitialActivity extends AppCompatActivity {
         double longitude = 0.121817;
         double latitude = 52.205338;
         Date date = Calendar.getInstance().getTime();
-        ReportHTTP conn = new ReportHTTP("www.google.com");
-        //TODO: conn.newReport(reportId, date, latitude, longitude, initialPest, "", "", null, null, "0");
+        ReportHTTP conn = new ReportHTTP("http://10.248.103.59:4567");
+        try {
+            conn.newReport(reportId, date, latitude, longitude, initialPest, "", "", null, "0");
+        }
+        catch (Exception e){};
 
         NavUtils.navigateUpFromSameTask(this);
     }

@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         int lastOpened = sharedPreferences.getInt("LAST_OPENED", 0);
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        //TODO: Remove
         int currentTime = Integer.parseInt(sdf.format(cal.getTime()));
         if ((lastOpened==0) || (lastOpened<currentTime)){
             Intent intent = new Intent(this, InitialActivity.class);

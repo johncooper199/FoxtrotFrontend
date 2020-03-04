@@ -10,16 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class NearbyReportsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    String url;
-    ReportHTTP reportHTTP = new ReportHTTP(url);
+    String url = "http://10.248.103.59:4567";
     double latitude = 52.210925;
         double longitude = 0.092022;
-    String[] myDataset = /*{"Pea and been weevil - 4 miles",
+    String[] myDataset = {};
+    String[] dummy = {"Pea and been weevil - 4 miles",
             "Chocolate spot - 12 miles",
             "Bean seed beetle - 19 miles",
             "Chocolate spot - 26 miles",
@@ -118,15 +119,20 @@ public class NearbyReportsActivity extends AppCompatActivity {
             "Aphid - 493 miles",
             "Bean seed beetle - 497 miles",
             "Bean seed beetle - 505 miles",
-            "Downy mildew - 513 miles"}*/{};
+            "Downy mildew - 513 miles"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ArrayList<NearbyReport> nearbyReports= reportHTTP.getInitialRadar(latitude,longitude);
-        myDataset = new String[nearbyReports.size()];
-        for (int i = 0; i< nearbyReports.size();i++) {
-            String temp =  nearbyReports.get(i).getName() + " - " + getDistance(latitude,longitude, nearbyReports.get(i).getLatitude(), nearbyReports.get(i).getLongitude())+" miles";
-            myDataset[i]= temp;
+        try {
+            ReportHTTP reportHTTP = new ReportHTTP(url);
+            ArrayList<NearbyReport> nearbyReports = reportHTTP.getInitialRadar(latitude, longitude);
+            myDataset = new String[nearbyReports.size()];
+            for (int i = 0; i < nearbyReports.size(); i++) {
+                String temp = nearbyReports.get(i).getName() + " - " + getDistance(latitude, longitude, nearbyReports.get(i).getLatitude(), nearbyReports.get(i).getLongitude()) + " miles";
+                myDataset[i] = temp;
+            }
+        } catch(Exception e){
+            myDataset = dummy;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_reports);

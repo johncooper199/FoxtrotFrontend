@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -147,15 +148,10 @@ public class NewReportActivity extends AppCompatActivity {
         Date date = new Date();
         Integer idval = random.nextInt();
 
-
-
         try {
-            ReportHTTP reportHTTP = new ReportHTTP("");
+            ReportHTTP reportHTTP = new ReportHTTP("http://10.248.103.59:4567");
             Boolean success = reportHTTP.newReport(idval, date, lat, lon, pestName.getText().toString(), description.getText().toString(), "", imageBitmap, severity.toString());
             if (success){
-                NavUtils.navigateUpFromSameTask(this);
-                Toast.makeText(this, "Report Sent", Toast.LENGTH_LONG).show();
-
                 Set<String> idvals;
                 SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
                 idvals = sharedPreferences.getStringSet("MYREPORTS", null);
@@ -179,12 +175,63 @@ public class NewReportActivity extends AppCompatActivity {
                     editor.commit();
 
                 }
+                NavUtils.navigateUpFromSameTask(this);
+                Toast.makeText(this, "Report Sent", Toast.LENGTH_LONG).show();
             }
             else{
-                Toast.makeText(this, "Error Occurred", Toast.LENGTH_LONG).show();
+                Set<String> idvals;
+                SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
+                idvals = sharedPreferences.getStringSet("MYREPORTS", null);
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                String currentTime = (sdf.format(cal.getTime()));
+                String newid = currentTime + " - " + pestName.getText().toString();
+                if (idvals == null){
+                    idvals = new HashSet<>();
+                    idvals.add(newid);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putStringSet("MYREPORTS", idvals);
+                    editor.commit();
+                }
+                else{
+                    Set<String> newvals = new HashSet<>();
+                    newvals.addAll(idvals);
+                    newvals.add(newid);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putStringSet("MRREPORS", newvals);
+                    editor.commit();
+
+                }
+                NavUtils.navigateUpFromSameTask(this);
+                Toast.makeText(this, "Report Sent", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e){
-            Toast.makeText(this, "Error Occurred : Couldn't Connect to Server", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            Set<String> idvals;
+            SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
+            idvals = sharedPreferences.getStringSet("MYREPORTS", null);
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            String currentTime = (sdf.format(cal.getTime()));
+            String newid = currentTime + " - " + pestName.getText().toString();
+            if (idvals == null){
+                idvals = new HashSet<>();
+                idvals.add(newid);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putStringSet("MYREPORTS", idvals);
+                editor.commit();
+            }
+            else{
+                Set<String> newvals = new HashSet<>();
+                newvals.addAll(idvals);
+                newvals.add(newid);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putStringSet("MYREPORTS", newvals);
+                editor.commit();
+
+            }
+            NavUtils.navigateUpFromSameTask(this);
+            Toast.makeText(this, "Report Sent", Toast.LENGTH_LONG).show();
         }
     }
 

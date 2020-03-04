@@ -18,7 +18,8 @@ import java.util.Set;
 
 public class UpdateActivity extends AppCompatActivity {
 
-    String[] reports = {"12/01/2018 04:01 AM - Bean rust",
+    String[] reports;
+    String[] dummy = {"12/01/2018 04:01 AM - Bean rust",
             "24/08/2018 09:20 PM - Chocolate spot",
             "22/04/2018 04:21 AM - Downy mildew",
             "11/01/2018 02:57 AM - Pea and been weevil",
@@ -92,10 +93,10 @@ public class UpdateActivity extends AppCompatActivity {
     public String[] getMyDataset(){
         Set<String> idvals;
         SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
-        idvals = sharedPreferences.getStringSet("IDs", null);
+        idvals = sharedPreferences.getStringSet("MYREPORTS", null);
         String[] result;
         if (idvals == null){
-            result = reports;
+            result = dummy;
         }
         else{
             result = new String[idvals.size()];

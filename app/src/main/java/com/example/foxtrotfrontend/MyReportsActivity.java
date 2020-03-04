@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,7 +18,8 @@ public class MyReportsActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    String[] myDataset = {"12/01/2018 04:01 AM - Bean rust",
+    String[] myDataset;
+    String[] dummy = {"12/01/2018 04:01 AM - Bean rust",
             "24/08/2018 09:20 PM - Chocolate spot",
             "22/04/2018 04:21 AM - Downy mildew",
             "11/01/2018 02:57 AM - Pea and been weevil",
@@ -83,10 +85,10 @@ public class MyReportsActivity extends AppCompatActivity {
     public String[] getMyDataset(){
         Set<String> idvals;
         SharedPreferences sharedPreferences = getSharedPreferences("REPORTS", MODE_PRIVATE);
-        idvals = sharedPreferences.getStringSet("IDs", null);
+        idvals = sharedPreferences.getStringSet("MYREPORTS", null);
         String[] result;
         if (idvals == null){
-            result = myDataset;
+            result = dummy;
         }
         else{
             result = new String[idvals.size()];

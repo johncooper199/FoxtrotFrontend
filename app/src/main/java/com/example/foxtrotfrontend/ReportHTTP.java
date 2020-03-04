@@ -72,6 +72,7 @@ public class ReportHTTP {
                 os.close();
             } catch (IOException e) {
                 System.err.println("Output Stream Error");
+                e.printStackTrace();
             }
 
             StringBuilder response = new StringBuilder();
@@ -87,6 +88,7 @@ public class ReportHTTP {
 
             } catch (IOException e) {
                 System.err.println("Input Stream Error");
+                e.printStackTrace();
             }
 
             JSONObject result = new JSONObject(response.toString());
