@@ -1,6 +1,7 @@
 package com.example.foxtrotfrontend;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,10 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +34,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("NIAB Data Collection");
+
+        // Checking if it should show streak screen
+        SharedPreferences sharedPreferences = getSharedPreferences("STREAKS", MODE_PRIVATE);
+        int lastOpened = sharedPreferences.getInt("LAST_OPENED", 0);
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        //TODO: Remove
+        int currentTime = Integer.parseInt(sdf.format(cal.getTime()));
+        if ((lastOpened==0) || (lastOpened<currentTime)){
+            Intent intent = new Intent(this, InitialActivity.class);
+            startActivity(intent);
+        }
 
     }
 
